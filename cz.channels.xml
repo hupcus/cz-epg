@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<channels>
+  <channel site="m.tv.sms.cz" site_id="Barrandov+Krimi" lang="cs" xmltv_id="BarrandovKrimi.cz@SD">Barrandov Krimi</channel>
+  <channel site="m.tv.sms.cz" site_id="Disney+Channel" lang="cs" xmltv_id="DisneyChannel.cz@SD">Disney Channel</channel>
+  <channel site="m.tv.sms.cz" site_id="History+Channel" lang="cs" xmltv_id="History.cz@SD">History Channel</channel>
+  <channel site="m.tv.sms.cz" site_id="Minimax" lang="cs" xmltv_id="MinimaxCEE.cz@SD">Minimax</channel>
+  <channel site="m.tv.sms.cz" site_id="Nicktoons" lang="cs" xmltv_id="Nicktoons.cz@SD">Nicktoons</channel>
+  <channel site="m.tv.sms.cz" site_id="Prima" lang="cs" xmltv_id="Prima.cz@SD">Prima</channel>
+  <channel site="m.tv.sms.cz" site_id="Prima+LOVE" lang="cs" xmltv_id="PrimaLove.cz@SD">Prima LOVE</channel>
+  <channel site="m.tv.sms.cz" site_id="Prima+Show" lang="cs" xmltv_id="PrimaShow.cz@SD">Prima Show</channel>
+  <channel site="m.tv.sms.cz" site_id="Prima+ZOOM" lang="cs" xmltv_id="PrimaZoom.cz@SD">Prima ZOOM</channel>
+  <channel site="m.tv.sms.cz" site_id="Seznam.cz+TV" lang="cs" xmltv_id="TelevizeSeznam.cz@SD">Seznam.cz TV</channel>
+  <channel site="m.tv.sms.cz" site_id="%C8T1" lang="cs" xmltv_id="CT1.cz@SD">ČT1</channel>
+  <channel site="m.tv.sms.cz" site_id="%C8T2" lang="cs" xmltv_id="CT2.cz@SD">ČT2</channel>
+  <channel site="m.tv.sms.cz" site_id="%C8T24" lang="cs" xmltv_id="CT24.cz@SD">ČT24</channel>
+  <channel site="m.tv.sms.cz" site_id="%C8T+%3AD" lang="cs" xmltv_id="CTDecko.cz@SD">ČT :D</channel>
+  <channel site="m.tv.sms.cz" site_id="%C8T+art" lang="cs" xmltv_id="CTart.cz@SD">ČT art</channel>
+</channels>
