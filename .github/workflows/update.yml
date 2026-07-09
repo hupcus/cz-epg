@@ -1,0 +1,80 @@
+name: Update EPG
+
+on:
+  schedule:
+    - cron: '0 3 * * *' # daily at 03:00 UTC (05:00 Europe/Prague)
+  workflow_dispatch: {} # allow manual runs from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-epg
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Clone iptv-org/epg
+        run: git clone --depth 1 https://github.com/iptv-org/epg.git epg
+
+      - name: Install dependencies
+        run: cd epg && npm install --no-audit --no-fund
+
+      - name: Use custom channel list
+        run: cp cz.channels.xml epg/cz.channels.xml
+
+      - name: Patch m.tv.sms.cz parser (load dayjs customParseFormat)
+        run: |
+          cfg=epg/sites/m.tv.sms.cz/m.tv.sms.cz.config.js
+          if ! grep -q "customParseFormat" "$cfg"; then
+            sed -i \
+              -e "/const timezone = require('dayjs\/plugin\/timezone')/a const customParseFormat = require('dayjs/plugin/customParseFormat')" \
+              -e "/dayjs.extend(timezone)/a dayjs.extend(customParseFormat)" \
+              "$cfg"
+          fi
+          grep -n "customParseFormat" "$cfg"
+
+      - name: Grab EPG (SECLEVEL=0 for the server's weak DH key + old cert)
+        run: |
+          cd epg
+          NODE_OPTIONS='--tls-cipher-list=DEFAULT@SECLEVEL=0' \
+            npm run grab --- \
+              --channels=cz.channels.xml \
+              --output="$GITHUB_WORKSPACE/guide.xml" \
+              --days=7 \
+              --maxConnections=5
+
+      - name: Merge ČT art into ČT :D (shared physical channel)
+        run: node postprocess-epg.js
+
+      - name: Sanity check output
+        run: |
+          programmes=$(grep -c "<programme " guide.xml || echo 0)
+          channels=$(grep -c "<channel " guide.xml || echo 0)
+          echo "channels=$channels programmes=$programmes"
+          if [ "$programmes" -lt 500 ]; then
+            echo "::error::Too few programmes ($programmes) — grab likely failed"
+            exit 1
+          fi
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add guide.xml
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update EPG ($(date -u +%Y-%m-%dT%H:%MZ))"
+            git push
+          fi
